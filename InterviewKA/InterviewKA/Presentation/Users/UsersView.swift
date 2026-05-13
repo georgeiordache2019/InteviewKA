@@ -13,15 +13,23 @@ struct UsersView: View {
     var body: some View {
         NavigationStack {
             VStack {
-                ForEach(viewModel.users) { user in
-                    NavigationLink {
-                        UserDetailView(user: user)
-                    } label: {
-                        Text(user.name.first)
-                            .padding()
+                ScrollView {
+                    ForEach(viewModel.users) { user in
+                        NavigationLink {
+                            UserDetailView(user: user)
+                        } label: {
+                            Text(user.name.first)
+                                .padding()
+                        }
                     }
                 }
-            }
+                
+                Button("Show More") {
+                    Task {
+                        await viewModel.getUsers()
+                    }
+                }
+            }.padding(.vertical)
         }
         .onAppear {
             Task {

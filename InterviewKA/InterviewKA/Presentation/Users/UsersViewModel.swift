@@ -20,9 +20,9 @@ final class UsersViewModel: ObservableObject {
     func getUsers() async {
         do {
             let userResponse = try await usersUseCase.execute(count: 10)
-            self.users = userResponse
+            self.users.append(contentsOf: userResponse)
         } catch {
             print(error.localizedDescription)
         }
     }
-}
+    }
