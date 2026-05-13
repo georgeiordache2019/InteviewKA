@@ -8,7 +8,6 @@
 import Foundation
 import Combine
 
-@MainActor
 final class UsersViewModel: ObservableObject {
     @Published var users: [User] = []
     @Published var filteredUsers: [User] = []
@@ -17,6 +16,7 @@ final class UsersViewModel: ObservableObject {
     private let usersUseCase: UsersUseCaseProtocol
     private let storage: UsersStorageProtocol
     private var cancellables = Set<AnyCancellable>()
+    private let count = 10
     
     init(usersUseCase: UsersUseCaseProtocol = UsersUseCase(repository: UserRepository()),
          storage: UsersStorageProtocol = UsersStorage()) {
@@ -44,8 +44,9 @@ final class UsersViewModel: ObservableObject {
             users.append(contentsOf: newUsers)
             
             storage.save(users: users)
-            
-            filterUsers(with: searchText)
+            await MainActor.run {
+                filterUsers(with: searchText)
+            }
             
         } catch {
             print(error.localizedDescription)
