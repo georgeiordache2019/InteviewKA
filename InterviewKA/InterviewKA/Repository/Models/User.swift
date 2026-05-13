@@ -5,7 +5,10 @@
 //  Created by George on 13.05.2026.
 //
 
-struct User {
+import Foundation
+
+struct User: Identifiable {
+    let id: UUID = .init()
     let gender: String
     let name: Name
     let email: String

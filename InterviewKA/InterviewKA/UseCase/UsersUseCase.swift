@@ -1,19 +1,19 @@
 //
-//  FetchUsersUseCase.swift
+//  UsersUseCase.swift
 //  InterviewKA
 //
 //  Created by George on 13.05.2026.
 //
 
-protocol FetchUsersUseCase {
+protocol UsersUseCaseProtocol {
     func execute(count: Int) async throws -> [User]
 }
 
-final class DefaultFetchUsersUseCase: FetchUsersUseCase {
+final class UsersUseCase: UsersUseCaseProtocol {
 
     private let repository: UserRepositoryProtocol
 
-    init(repository: UserRepositoryProtocol) {
+    init(repository: UserRepositoryProtocol = UserRepository(client: DefaultKAHTTPClient())) {
         self.repository = repository
     }
 

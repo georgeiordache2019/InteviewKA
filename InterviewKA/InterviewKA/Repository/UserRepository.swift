@@ -13,7 +13,7 @@ final class UserRepository: UserRepositoryProtocol {
 
     private let client: KAHTTPClient
 
-    init(client: KAHTTPClient) {
+    init(client: KAHTTPClient = DefaultKAHTTPClient()) {
         self.client = client
     }
 

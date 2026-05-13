@@ -12,12 +12,12 @@ import XCTest
 final class FetchUsersUseCaseTests: XCTestCase {
 
     private var repository: MockUserRepository!
-    private var useCase: DefaultFetchUsersUseCase!
+    private var useCase: UsersUseCase!
 
     override func setUp() {
         super.setUp()
         repository = MockUserRepository()
-        useCase = DefaultFetchUsersUseCase(repository: repository)
+        useCase = UsersUseCase(repository: repository)
     }
 
     override func tearDown() {
