@@ -53,4 +53,19 @@ final class FetchUsersUseCaseTests: XCTestCase {
         XCTAssertEqual(result.count, 1)
         XCTAssertEqual(result.first?.email, "john@example.com")
     }
+    
+    func test_execute_throwsError() async {
+
+        // Given
+        struct DummyError: Error {}
+        repository.result = .failure(DummyError())
+
+        // When / Then
+        do {
+            _ = try await useCase.execute(count: 5)
+            XCTFail("Expected error to be thrown")
+        } catch {
+            XCTAssertTrue(repository.fetchUsersCalled)
+        }
+    }
 }
