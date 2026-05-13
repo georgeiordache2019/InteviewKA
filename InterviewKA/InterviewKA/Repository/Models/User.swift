@@ -7,8 +7,7 @@
 
 import Foundation
 
-struct User: Identifiable {
-    let id: UUID = .init()
+struct User: Codable {
     let gender: String
     let name: Name
     let email: String
@@ -17,7 +16,7 @@ struct User: Identifiable {
     let picture: Picture
 }
 
-struct Name {
+struct Name: Codable {
     let title: String
     let first: String
     let last: String
@@ -27,7 +26,7 @@ struct Name {
     }
 }
 
-struct Picture {
+struct Picture: Codable {
     let large: String
     let medium: String
     let thumbnail: String

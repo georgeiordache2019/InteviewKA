@@ -15,21 +15,54 @@ final class UsersViewModel: ObservableObject {
     @Published var searchText: String = ""
     
     private let usersUseCase: UsersUseCaseProtocol
+    private let storage: UsersStorageProtocol
     private var cancellables = Set<AnyCancellable>()
-
-    init(usersUseCase: UsersUseCaseProtocol = UsersUseCase(repository: UserRepository())) {
+    
+    init(usersUseCase: UsersUseCaseProtocol = UsersUseCase(repository: UserRepository()),
+         storage: UsersStorageProtocol = UsersStorage()) {
         self.usersUseCase = usersUseCase
+        self.storage = storage
         setupSearch()
+        loadPersistedUsers()
     }
     
     func getUsers() async {
         do {
-            let userResponse = try await usersUseCase.execute(count: 10)
-            self.users.append(contentsOf: userResponse)
-            self.filteredUsers = userResponse
+            let response = try await usersUseCase.execute(count: 10)
+            let deletedEmails = storage.loadDeletedUsers()
+            
+            let filteredResponse = response.filter {
+                !deletedEmails.contains($0.email)
+            }
+            
+            let existingEmails = Set(users.map(\.email))
+            
+            let newUsers = filteredResponse.filter {
+                !existingEmails.contains($0.email)
+            }
+            
+            users.append(contentsOf: newUsers)
+            
+            storage.save(users: users)
+            
+            filterUsers(with: searchText)
+            
         } catch {
             print(error.localizedDescription)
         }
+    }
+    
+    func deleteUser(_ user: User) {
+        users.removeAll { $0.email == user.email }
+        filteredUsers.removeAll { $0.email == user.email }
+        
+        storage.saveDeletedUser(email: user.email)
+        storage.save(users: users)
+    }
+    
+    private func loadPersistedUsers() {
+        users = storage.loadUsers()
+        filteredUsers = users
     }
     
     private func setupSearch() {

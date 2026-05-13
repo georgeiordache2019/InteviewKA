@@ -14,12 +14,23 @@ struct UsersView: View {
         NavigationStack {
             VStack {
                 ScrollView {
-                    ForEach(viewModel.filteredUsers) { user in
-                        NavigationLink {
-                            UserDetailView(user: user)
-                        } label: {
-                            Text(user.name.first)
-                                .padding()
+                    ForEach(viewModel.filteredUsers, id: \.email) { user in
+                        VStack {
+                            HStack {
+                                NavigationLink {
+                                    UserDetailView(user: user)
+                                } label: {
+                                    Text(user.name.first)
+                                        .padding()
+                                }
+                                Spacer()
+                                
+                                Button(role: .destructive) {
+                                    viewModel.deleteUser(user)
+                                } label: {
+                                    Image(systemName: "trash")
+                                }
+                            }.padding(.horizontal)
                         }
                     }
                 }
