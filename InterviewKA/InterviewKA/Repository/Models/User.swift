@@ -21,10 +21,20 @@ struct Name {
     let title: String
     let first: String
     let last: String
+    
+    var fullName: String {
+        return "\(first) \(last)"
+    }
 }
 
 struct Picture {
     let large: String
     let medium: String
     let thumbnail: String
+}
+
+extension Picture {
+    var urlImage: URL? {
+        return URL(string: medium)
+    }
 }

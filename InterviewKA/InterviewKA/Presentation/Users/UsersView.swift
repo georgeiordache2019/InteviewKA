@@ -11,9 +11,16 @@ struct UsersView: View {
     @StateObject private var viewModel: UsersViewModel = .init()
     
     var body: some View {
-        VStack {
-            ForEach(viewModel.users) { user in
-                Text("\(user.name.first)")
+        NavigationStack {
+            VStack {
+                ForEach(viewModel.users) { user in
+                    NavigationLink {
+                        UserDetailView(user: user)
+                    } label: {
+                        Text(user.name.first)
+                            .padding()
+                    }
+                }
             }
         }
         .onAppear {
@@ -21,6 +28,7 @@ struct UsersView: View {
                 await viewModel.getUsers()
             }
         }
+        .navigationTitle("Users")
     }
 }
-        
+
