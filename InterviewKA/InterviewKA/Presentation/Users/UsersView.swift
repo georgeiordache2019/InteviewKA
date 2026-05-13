@@ -14,7 +14,7 @@ struct UsersView: View {
         NavigationStack {
             VStack {
                 ScrollView {
-                    ForEach(viewModel.users) { user in
+                    ForEach(viewModel.filteredUsers) { user in
                         NavigationLink {
                             UserDetailView(user: user)
                         } label: {
@@ -31,10 +31,10 @@ struct UsersView: View {
                 }
             }.padding(.vertical)
         }
-        .onAppear {
-            Task {
-                await viewModel.getUsers()
-            }
+        .searchable(text: $viewModel.searchText,
+                    prompt: "Search by name, surname or email")
+        .task {
+            await viewModel.getUsers()
         }
         .navigationTitle("Users")
     }
